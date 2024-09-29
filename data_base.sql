@@ -1,7 +1,7 @@
 -- Создание таблицы игроков
 CREATE TABLE players (
     player_id SERIAL PRIMARY KEY,
-    unique_id VARCHAR(255) NOT NULL UNIQUE,  -- Уникальный ID игрока
+    unique_player_name VARCHAR(255) NOT NULL UNIQUE,  -- Уникальное имя игрока
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
