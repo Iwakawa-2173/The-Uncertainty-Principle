@@ -25,7 +25,7 @@ namespace The_Uncertainty_Principle.Controllers
        public ActionResult<ChatMessage> GetChatMessage(int id)
        {
            var chatMessage = _context.ChatMessages.Find(id);
-           if (chatMessage == null) return NotFound();
+           if (chatMessage == null) return BadRequest();
            return chatMessage;
        }
 
@@ -50,7 +50,7 @@ namespace The_Uncertainty_Principle.Controllers
        public IActionResult DeleteChatMessage(int id)
        {
            var chatMessage = _context.ChatMessages.Find(id);
-           if (chatMessage == null) return NotFound();
+           if (chatMessage == null) return BadRequest();
            _context.ChatMessages.Remove(chatMessage);
            _context.SaveChanges();
            return NoContent();
