@@ -25,7 +25,7 @@ namespace The_Uncertainty_Principle.Controllers
         public ActionResult<Event> GetEvent(int id)
         {
             var eventItem = _context.Events.Find(id);
-            if (eventItem == null) return NotFound();
+            if (eventItem == null) return BadRequest();
             return eventItem;
         }
 
@@ -50,7 +50,7 @@ namespace The_Uncertainty_Principle.Controllers
         public IActionResult DeleteEvent(int id)
         {
             var eventItem = _context.Events.Find(id);
-            if (eventItem == null) return NotFound();
+            if (eventItem == null) return BadRequest();
             _context.Events.Remove(eventItem);
             _context.SaveChanges();
             return NoContent();
