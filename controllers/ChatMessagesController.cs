@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Data;
-using Npgsql; // Используем Npgsql для работы с PostgreSQL
+using Npgsql; 
 using System.Threading.Tasks;
 
 namespace The_Uncertainty_Principle.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ChatMessagesController : ControllerBase
+    public class ChatMessagesController : ControllerBase, IChatMessagesController // Реализация интерфейса
     {
         private readonly string _connectionString;
 
@@ -88,7 +88,7 @@ namespace The_Uncertainty_Principle.Controllers
                 {
                     command.Parameters.AddWithValue("player_id", chatMessage.PlayerId);
                     command.Parameters.AddWithValue("message", chatMessage.Message);
-                    
+
                     var newId = await command.ExecuteScalarAsync();
                     chatMessage.MessageId = Convert.ToInt32(newId);
                 }
@@ -130,7 +130,7 @@ namespace The_Uncertainty_Principle.Controllers
                 using (var command = new NpgsqlCommand("DELETE FROM chat_messages WHERE message_id = @id", connection))
                 {
                     command.Parameters.AddWithValue("id", id);
-                    
+
                     var affectedRows = await command.ExecuteNonQueryAsync();
                     if (affectedRows == 0) return NotFound();
                 }
