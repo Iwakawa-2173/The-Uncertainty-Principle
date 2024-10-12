@@ -25,7 +25,7 @@ namespace The_Uncertainty_Principle.Controllers
        public ActionResult<ScoreScale> GetScoreScale(int id)
        {
            var scoreScale = _context.ScoreScales.Find(id);
-           if (scoreScale == null) return NotFound();
+           if (scoreScale == null) return BadRequest();
            return scoreScale;
        }
 
@@ -50,7 +50,7 @@ namespace The_Uncertainty_Principle.Controllers
        public IActionResult DeleteScoreScale(int id)
        {
            var scoreScale = _context.ScoreScales.Find(id);
-           if (scoreScale == null) return NotFound();
+           if (scoreScale == null) return BadRequest();
            _context.ScoreScales.Remove(scoreScale);
            _context.SaveChanges();
            return NoContent();
