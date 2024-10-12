@@ -25,7 +25,7 @@ namespace The_Uncertainty_Principle.Controllers
         public ActionResult<Response> GetResponse(int id)
         {
             var response = _context.Responses.Find(id);
-            if (response == null) return NotFound();
+            if (response == null) return BadRequest();
             return response;
         }
 
@@ -50,7 +50,7 @@ namespace The_Uncertainty_Principle.Controllers
         public IActionResult DeleteResponse(int id)
         {
             var response = _context.Responses.Find(id);
-            if (response == null) return NotFound();
+            if (response == null) return BadRequest();
             _context.Responses.Remove(response);
             _context.SaveChanges();
             return NoContent();
