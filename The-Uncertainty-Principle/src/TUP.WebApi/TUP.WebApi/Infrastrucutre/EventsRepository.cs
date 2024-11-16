@@ -1,52 +1,56 @@
 using TUP.WebApi.Domain.Entities;
-using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace TUP.WebApi.Infrastructure.Repositories
 {
     public class EventRepository : RepositoryBase<Event>
     {
-        public EventRepository(IConfiguration configuration) : base(configuration) { }
+        private readonly TUPContext _context;
+
+        public EventRepository(TUPContext context) : base(context)
+        {
+            _context = context;
+        }
 
         public override async Task DeleteAsync(long id)
         {
-            var sql = $"DELETE FROM events WHERE event_id = {id}";
-            await ExecuteSqlAsync(sql);
+            var eventToDelete = await _context.Events.FindAsync(id);
+            if (eventToDelete != null)
+            {
+                _context.Events.Remove(eventToDelete);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public override async Task<IEnumerable<Event>> GetAllAsync()
         {
-            var sql = "SELECT * FROM events";
-            return await ExecuteSqlReaderAsync(sql);
+            return await _context.Events.ToListAsync();
         }
 
         public override async Task<Event> GetByIdAsync(long id)
         {
-            var sql = $"SELECT * FROM events WHERE event_id = {id}";
-            var events = await ExecuteSqlReaderAsync(sql);
-            return events.FirstOrDefault();
+            return await _context.Events.FindAsync(id);
         }
 
         public override async Task<long> InsertAsync(Event entity)
         {
-            var sql = $"INSERT INTO events (event_number, is_significant, description) OUTPUT INSERTED.event_id VALUES ({entity.EventNumber}, '{entity.IsSignificant}', '{entity.Description}')";
-            return await ExecuteSqlAsync(sql);
+            await _context.Events.AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity.EventId; // Предполагается, что EventId генерируется автоматически
         }
 
         public override async Task UpdateAsync(long id, Event entity)
         {
-            var sql = $"UPDATE events SET event_number = {entity.EventNumber}, is_significant = '{entity.IsSignificant}', description = '{entity.Description}' WHERE event_id = {id}";
-            await ExecuteSqlAsync(sql);
-        }
-
-        protected override Event GetEntityFromReader(SqlDataReader reader)
-        {
-            return new Event
+            var existingEvent = await _context.Events.FindAsync(id);
+            if (existingEvent != null)
             {
-                EventId = reader.GetInt32(0),
-                EventNumber = reader.GetInt32(1),
-                IsSignificant = reader.GetBoolean(2),
-                Description = reader.GetString(3)
-            };
+                existingEvent.EventNumber = entity.EventNumber;
+                existingEvent.IsSignificant = entity.IsSignificant;
+                existingEvent.Description = entity.Description;
+
+                _context.Events.Update(existingEvent);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
