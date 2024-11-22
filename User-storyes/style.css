@@ -1,0 +1,45 @@
+h1 {
+	color: rgb(255, 255, 255);
+    text-shadow: 1pt 1pt 30pt rgb(0, 195, 255);
+    font-size: 1500%;
+    margin: auto;
+    text-align: center;
+}
+
+body {
+    background-image: url('space.gif');
+    background-size: 10%;
+}
+
+h2 {
+	color: rgb(255, 255, 255);
+    border: 2pt solid rgb(0, 195, 255);
+    text-shadow: 1pt 1pt 30pt rgb(0, 195, 255);
+    font-size: 700%;
+    margin: auto;
+	text-align: justify;
+}
+
+h4 {
+	color: rgb(255, 255, 255);
+    border: 2pt solid rgb(0, 195, 255);
+    text-shadow: 1pt 1pt 30pt rgb(0, 195, 255);
+    font-size: 200%;
+    margin: auto;
+    text-align: center;
+}
+
+h3 {
+	color: rgb(255, 255, 255);
+    border: 10pt solid #1e00ffb9;
+    text-shadow: 1pt 1pt 30pt rgb(0, 195, 255);
+    font-size: 700%;
+    margin: auto;
+    text-align: justify;
+}
+
+img {
+    display: block;
+    border: 2pt solid rgb(0, 195, 255);
+    margin: auto;
+}
