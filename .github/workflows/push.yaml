@@ -15,7 +15,5 @@ jobs:
           sh get-docker.sh
 
       - name: Docker Build
-        working-directory: ./src/TUP.WebApi
         run: |
-            ls -l
-            docker build . -t tup
+            docker build -f src/TUP.WebApi/TUP.WebApi/Dockerfile -t tup ./src/TUP.WebApi
