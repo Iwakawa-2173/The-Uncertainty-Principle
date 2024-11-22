@@ -1,19 +1,28 @@
 name: CI на Github
-on:	
+on:
   push:
 jobs:
   build:
     name: Checkout and build
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3  # Обновлено до последней версии
-
-      - name: Установка Docker
+    steps:      
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: sudo
         run: |
-          curl -fsSL https://get.docker.com -o get-docker.sh
-          sh get-docker.sh
-
-      - name: Docker Build
+            apt update && apt install sudo     
+            
+      - # Установка docker   
+        name: Set up docker
         run: |
-            docker build -f src/TUP.WebApi/TUP.WebApi/Dockerfile -t tup ./src/TUP.WebApi
+          curl -sSL https://get.docker.com/ | sudo sh    
+    
+      - name: docker build
+        working-directory: ./src/TUP.WebApi
+        run: |
+            ls -l
+            cd ./TUP.WebApi
+            ls -l
+            docker build . -t goals-example
