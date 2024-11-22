@@ -6,23 +6,16 @@ jobs:
     name: Checkout and build
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v2
 
-      - name: sudo
+      - name: Установка Docker
         run: |
-            apt update && apt install sudo     
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sh get-docker.sh
 
-      - # Установка docker
-        name: Set up docker
-        run: |
-          curl -sSL https://get.docker.com/ | sudo sh    
-
-      - name: docker build
+      - name: Docker Build
         working-directory: ./src/TUP.WebApi
         run: |
-            ls -l
-            cd ./TUP.WebApi
             ls -l
             docker build . -t tup
