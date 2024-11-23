@@ -1,6 +1,0 @@
-@GoalsExample.WebApi_HostAddress = http://localhost:5027
-
-GET {{TUP.WebApi_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
