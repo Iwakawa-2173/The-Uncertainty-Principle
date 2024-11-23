@@ -11,59 +11,72 @@ namespace TUP.WebApi.Controllers
     public class EventsController : ControllerBase
     {
         private readonly ILogger<EventsController> logger;
-        private readonly IRepository<Event> eventsRepository;
+        private readonly IEventService eventService;
 
-        public EventsController(ILogger<EventsController> logger, IRepository<Event> eventsRepository)
+        public EventsController(ILogger<EventsController> logger, IEventService eventService)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.eventsRepository = eventsRepository ?? throw new ArgumentNullException(nameof(eventsRepository));
+            this.eventService = eventService ?? throw new ArgumentNullException(nameof(eventService));
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Event>>> Get()
         {
-            this.logger.LogInformation("get all events");
-            return Ok(await eventsRepository.GetAllAsync());
+            this.logger.LogInformation("Получение всех событий");
+            var events = await eventService.GetAllAsync();
+            return Ok(events);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Event>> Get(int id)
+        public async Task<ActionResult<Event>> Get(long id)
         {
-            var eventItem = await eventsRepository.GetByIdAsync(id);
-            if (eventItem == null) return NotFound();
-            return Ok(eventItem);
+            try
+            {
+                var eventItem = await eventService.GetByIdAsync(id);
+                return Ok(eventItem);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost]
-        public async Task<ActionResult> Insert([FromBody] Event eventItem)
+        public async Task<ActionResult<long>> Insert([FromBody] Event eventItem)
         {
             if (string.IsNullOrWhiteSpace(eventItem.Description))
-                return BadRequest("Укажите описание события!");
+                return BadRequest();
 
-            return Ok(await eventsRepository.InsertAsync(eventItem));
+            var id = await eventService.InsertAsync(eventItem);
+            return CreatedAtAction(nameof(Get), new { id }, id);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update([FromRoute] int id, [FromBody] Event eventItem)
+        public async Task<ActionResult> Update([FromRoute] long id, [FromBody] Event eventItem)
         {
-            var existingEvent = await eventsRepository.GetByIdAsync(id);
-            if (existingEvent == null) return NotFound();
-
-            existingEvent.Description = eventItem.Description;
-            existingEvent.IsSignificant = eventItem.IsSignificant;
-            
-            await eventsRepository.UpdateAsync(id, existingEvent);
-            return Ok();
+            try
+            {
+                await eventService.UpdateAsync(id, eventItem);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete([FromRoute] int id)
+        public async Task<ActionResult> Delete([FromRoute] long id)
         {
-            var existingEvent = await eventsRepository.GetByIdAsync(id);
-            if (existingEvent == null) return NotFound();
-
-            await eventsRepository.DeleteAsync(id);
-            return Ok();
+            try
+            {
+                await eventService.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
     }
 }
