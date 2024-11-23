@@ -12,7 +12,7 @@ jobs:
       
       - name: sudo
         run: |
-            apt update && apt install sudo     
+            sudo apt update && sudo apt install sudo     
             
       - # Установка docker   
         name: Set up docker
