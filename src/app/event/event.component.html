@@ -1,0 +1,22 @@
+<div class="event-container">
+  <h2>Событие</h2>
+  
+  <p>{{ currentEvent.description }}</p>
+
+  <div class="options">
+    <button (click)="selectOption(0)">{{ currentEvent.options[0] }}</button>
+    <button (click)="selectOption(1)">{{ currentEvent.options[1] }}</button>
+    <button (click)="selectOption(2)">{{ currentEvent.options[2] }}</button>
+  </div>
+
+  <div class="chat-container">
+    <h3>Чат</h3>
+    
+    <div *ngFor="let msg of chatMessages">
+      <p>{{ msg.message }}</p>
+    </div>
+
+    <input [(ngModel)]="newMessage" placeholder="Ваше сообщение" />
+    <button (click)="sendMessage()">Отправить</button>
+  </div>
+</div>

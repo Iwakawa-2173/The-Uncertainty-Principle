@@ -1,0 +1,8 @@
+<div class="chat-container">
+  <h3>Чат</h3>
+  
+  <div *ngFor="let msg of messages">{{ msg }}</div>
+  
+  <input [(ngModel)]="message" placeholder="Ваше сообщение" />
+  <button (click)="sendMessage()">Отправить</button>
+</div>
